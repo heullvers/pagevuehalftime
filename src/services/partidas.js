@@ -6,5 +6,9 @@ export default{
     },
     verificarLink(link) {
         return http.post('verificarlink/', null, {params: {link: link}})
-    }
+    },
+    predizer(link) {
+        return http.post('predizer/', null, {params: {link: link}})
+    },
+
 }

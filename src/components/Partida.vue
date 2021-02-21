@@ -1,35 +1,48 @@
 <template>
-    <tr>
-          <td>
-            <v-col class="mt-8 tamanhoInternoColuna">
-              <p class="margemMandante" align="right">{{partida.timeMandante}}</p>
-            </v-col>
-          </td>
-        
-          <td>
-            <v-col class="tamanhoInternoColuna">
-              <p id="tempo" align="center">{{partida.situacao}}</p>
-              <v-row justify="center">
-                  <p>{{partida.GolsMandante}}</p>
-                  <p>-</p>
-                  <p>{{partida.GolsVisitante}}</p>
-              </v-row>
+  <tr @click="abrirDialog(partida.situacao, partida.linkEstatistica)">
+      <td>
+        <v-col class="mt-8 tamanhoInternoColuna">
+          <p class="margemMandante" align="right">{{partida.timeMandante}}</p>
+        </v-col>
+      </td>
 
-            </v-col>
-          </td>
+      <td>
+        <img class="mt-6" :src="partida.linkImagemMandante" alt="" width="30" height="30">
+      </td>
+    
+      <td>
+        <v-col class="tamanhoInternoColuna">
+          <p id="tempo" align="center">{{partida.situacao}}</p>
+          <v-row justify="center">
+              <p>{{partida.GolsMandante}}</p>
+              <p>-</p>
+              <p>{{partida.GolsVisitante}}</p>
+          </v-row>
 
-          <td> 
-            <v-col class="mt-8 tamanhoInternoColuna">
-              <p class="margemVisitante">{{partida.timeVisitante}}</p>
-            </v-col>
-          </td>
-          
-          <td v-if="partida.situacao == 'Intervalo'">
-            <button v-on:click="enviarLink(partida.linkEstatistica)">
-              <v-icon color="blue">cloud</v-icon>
-            </button>
-          </td>
-    </tr>
+        </v-col>
+      </td>
+
+      <td>
+        <img class="mt-6" :src="partida.linkImagemVisitante" alt="" width="30" height="30">
+      </td>
+
+      <td>
+        <v-row>
+          <v-col class="mt-8 tamanhoInternoColuna">
+            <p class="margemVisitante">{{partida.timeVisitante}}</p>
+          </v-col>
+        </v-row> 
+      </td>
+  
+      <!--
+      <td v-if="partida.situacao == 'Intervalo'">
+        <button v-on:click="enviarLink(partida.linkEstatistica)">
+          <v-icon color="blue">cloud</v-icon>
+        </button>
+      </td>
+      -->
+
+  </tr>
         
 </template>
 
@@ -37,17 +50,14 @@
 
 import Partidas from '../services/partidas'
 
+
 export default {
-    
   props:{
     partida : Object
   },
   methods:{
     async enviarLink(link){
-      this.showDialog = true
-      this.$emit('dialog', this.showDialog)
-      
-      
+
       try {
         await
         Partidas.verificarLink(link).then(res => {
@@ -58,21 +68,18 @@ export default {
         console.log(error)
         
       }
-      finally{
-        this.showDialog = false
-        this.$emit('dialog', this.showDialog)
-      }
-      
-      
       
     },
+
+    abrirDialog(situacao, linkEstatistica){
+      this.$emit('abrirDialog', [situacao, linkEstatistica])
+      //this.popup = true
+    },
+
   },
   data: () => ({
-    showDialog:false
+
   }),
-  mounted(){
-    
-  }
 }
 </script>
 
@@ -95,18 +102,25 @@ td{
 
 tr{
   /*box-shadow: 0px 1px 3px 0px rgba(0,0,50);*/
-  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
 }
+
+tr:hover{
+  cursor: pointer;
+  background-color: greenyellow;
+}
+
+
 .tamanhoInternoColuna{
   padding: 0px;
 }
 
 .margemMandante{
-  margin-right: 20px;
+  margin-left: 10px;
 }
 
 .margemVisitante{
-  margin-left: 20px;
+  margin-right: 10px;
 }
 
 p{
