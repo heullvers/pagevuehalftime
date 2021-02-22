@@ -33,6 +33,7 @@
           </v-col>
         </v-row> 
       </td>
+
   
       <!--
       <td v-if="partida.situacao == 'Intervalo'">
@@ -48,28 +49,13 @@
 
 <script>
 
-import Partidas from '../services/partidas'
-
 
 export default {
+
   props:{
     partida : Object
   },
   methods:{
-    async enviarLink(link){
-
-      try {
-        await
-        Partidas.verificarLink(link).then(res => {
-        console.log(res.data)
-    })
-        
-      } catch (error) {
-        console.log(error)
-        
-      }
-      
-    },
 
     abrirDialog(situacao, linkEstatistica){
       this.$emit('abrirDialog', [situacao, linkEstatistica])
