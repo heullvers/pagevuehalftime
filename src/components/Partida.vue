@@ -1,6 +1,6 @@
 <template>
-  <tr @click="abrirDialog(partida.situacao, partida.linkEstatistica)">
-      <td>
+  <tr @click="abrirDialog(partida.situacao, partida.linkEstatistica, partida.timeMandante, partida.timeVisitante)">
+      <td class="time">
         <v-col class="mt-8 tamanhoInternoColuna">
           <p class="margemMandante" align="right">{{partida.timeMandante}}</p>
         </v-col>
@@ -9,7 +9,7 @@
       <td>
         <img class="mt-6" :src="partida.linkImagemMandante" alt="" width="30" height="30">
       </td>
-    
+
       <td>
         <v-col class="tamanhoInternoColuna">
           <p id="tempo" align="center">{{partida.situacao}}</p>
@@ -22,17 +22,17 @@
         </v-col>
       </td>
 
-      <td>
-        <img class="mt-6" :src="partida.linkImagemVisitante" alt="" width="30" height="30">
-      </td>
+        <td>
+          <img class="mt-6" :src="partida.linkImagemVisitante" alt="" width="30" height="30">
+        </td>
 
-      <td>
-        <v-row>
-          <v-col class="mt-8 tamanhoInternoColuna">
-            <p class="margemVisitante">{{partida.timeVisitante}}</p>
-          </v-col>
-        </v-row> 
-      </td>
+        <td class="time">
+          <v-row>
+            <v-col class="mt-8 tamanhoInternoColuna">
+              <p class="margemVisitante">{{partida.timeVisitante}}</p>
+            </v-col>
+          </v-row> 
+        </td>
 
   
       <!--
@@ -57,8 +57,8 @@ export default {
   },
   methods:{
 
-    abrirDialog(situacao, linkEstatistica){
-      this.$emit('abrirDialog', [situacao, linkEstatistica])
+    abrirDialog(situacao, linkEstatistica, timeMandante, timeVisitante){
+      this.$emit('abrirDialog', [situacao, linkEstatistica, timeMandante, timeVisitante])
       //this.popup = true
     },
 
@@ -113,7 +113,8 @@ p{
   font-size: 14px;
 }
 
-
-
+.time{
+  max-width: 160px;
+}
 
 </style>

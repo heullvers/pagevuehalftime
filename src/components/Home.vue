@@ -78,6 +78,37 @@
     </v-dialog>
   </div>
 
+  <!-- DIALOG IMPOSSÍVEL -->
+      <div class="text-center">
+    <v-dialog
+      v-model="dialogImpEstatisticas"
+      width="500"
+    >
+
+      <v-card>
+            <v-card-title class="headline">
+              Atenção
+            </v-card-title>
+
+            <v-card-text>
+              Não será possível predizer pois as estatísticas desse jogo não estão disponíveis.
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="green darken-1"
+                text
+                v-on:click="entendi"
+              >
+                Entendi
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+    </v-dialog>
+  </div>
+
   <!-- LOAD -->
   <div class="text-center">
     <v-dialog
@@ -102,7 +133,7 @@
     </v-dialog>
   </div>
 
-  <v-btn @click="proximapagina" >clica aqui</v-btn>
+  
     </v-container>
 </template>
 
@@ -127,14 +158,23 @@ name: 'Home',
     ],
     dialog: false,
     dialogImpossible: false,
+    dialogImpEstatisticas: false,
     linkEstatistica: '',
     load: false,
-    textLoad: ''
+    textLoad: '',
+    timeMandante: '',
+    timeVisitante: ''
     
   }),
 
   mounted(){
+
     this.trazer()
+    
+    window.setInterval(() => {
+      this.trazer()
+    }, 30000)
+    
 
   },
 
@@ -151,6 +191,8 @@ name: 'Home',
 
     abrirDialog:function(situacao){
       this.linkEstatistica = situacao[1]
+      this.timeMandante = situacao[2]
+      this.timeVisitante = situacao[3]
       if(situacao[0] != 'Intervalo'){
         this.dialogImpossible = true
       }
@@ -162,6 +204,7 @@ name: 'Home',
 
     entendi:function(){
       this.dialogImpossible = false
+      this.dialogImpEstatisticas = false
     },
 
     verificarPossibilidade(){
@@ -176,7 +219,12 @@ name: 'Home',
       try {
         await
         Partidas.predizer(this.linkEstatistica).then(res =>{
-          console.log(res.data)
+          this.$router.push({
+          name: 'Predicao', 
+          params: { array: res.data,
+                    timeM: this.timeMandante,
+                    timeV: this.timeVisitante}
+          });
         })
       } catch (error) {
           console.log(error)
@@ -194,7 +242,6 @@ name: 'Home',
       try {
         await
         Partidas.verificarLink(this.linkEstatistica).then(res => {
-        console.log(res.data)
         if(res.data == '1'){
           this.predizer()
         }
@@ -202,6 +249,7 @@ name: 'Home',
 
           this.load = false
           console.log('NÃO SERÁ POSSIVEL PREDIZER')
+          this.dialogImpEstatisticas = true
         }
     })
         
@@ -212,10 +260,7 @@ name: 'Home',
     },
 
     proximapagina(){
-      this.$router.push({
-      name: 'Predicao', 
-      params: { errors: '123' }
-});
+      
     }
 
   }
@@ -233,5 +278,6 @@ name: 'Home',
 table{
   border-spacing: 0 5px;
 }
+
 
 </style>
